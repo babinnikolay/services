@@ -2,10 +2,7 @@ package ru.hukola.services.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.hukola.services.model.Order;
 import ru.hukola.services.service.OrderService;
 
@@ -29,5 +26,15 @@ public class OrderController {
     @GetMapping("{uuid}")
     public ResponseEntity<Order> findById(@PathVariable UUID uuid) {
         return ResponseEntity.ok(orderService.findById(uuid));
+    }
+
+    @PostMapping
+    public ResponseEntity<Order> create(@RequestBody Order order) {
+        return ResponseEntity.ok(orderService.save(order));
+    }
+
+    @PutMapping("{uuid}")
+    public ResponseEntity<Order> save(@PathVariable UUID uuid, @RequestBody Order order) {
+        return ResponseEntity.ok(orderService.create(uuid, order));
     }
 }

@@ -3,6 +3,7 @@ package ru.hukola.services.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -17,8 +18,11 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
-    @OneToOne
+    @Column(name = "order_date")
+    private Date date;
+    @OneToOne(cascade=CascadeType.ALL)
     private Client client;
     private String description;
     private float amount;
+    private boolean paid;
 }
