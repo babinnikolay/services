@@ -20,7 +20,7 @@ public class Order {
     private UUID uuid;
     @Column(name = "order_date")
     private Date date;
-    @OneToOne(cascade=CascadeType.ALL)
+    @OneToOne(cascade=CascadeType.MERGE)
     private Client client;
     private String description;
     private float amount;

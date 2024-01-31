@@ -33,7 +33,7 @@ public class OrderService {
         Order savedOrder = orderRepository.findById(uuid).orElseThrow();
         savedOrder.setAmount(order.getAmount());
         savedOrder.setPaid(order.isPaid());
-//        savedOrder.setClient(order.getClient());
+        savedOrder.setClient(order.getClient());
         savedOrder.setDescription(order.getDescription());
         savedOrder.setDate(order.getDate());
         orderRepository.save(savedOrder);
