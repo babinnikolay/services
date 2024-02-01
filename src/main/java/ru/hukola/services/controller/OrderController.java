@@ -37,4 +37,10 @@ public class OrderController {
     public ResponseEntity<Order> save(@PathVariable UUID uuid, @RequestBody Order order) {
         return ResponseEntity.ok(orderService.create(uuid, order));
     }
+
+    @DeleteMapping("{uuid}")
+    public ResponseEntity<Void> delete(@PathVariable UUID uuid) {
+        orderService.delete(uuid);
+        return ResponseEntity.ok().build();
+    }
 }
