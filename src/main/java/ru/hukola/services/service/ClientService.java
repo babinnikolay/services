@@ -25,13 +25,18 @@ public class ClientService {
         return clientRepository.findById(uuid).orElseThrow();
     }
 
-    public Client save(Client client) {
+    public Client create(Client client) {
         return clientRepository.save(client);
     }
 
-    public Client create(UUID uuid, Client client) {
+    public Client save(UUID uuid, Client client) {
         Client savedClient = clientRepository.findById(uuid).orElseThrow();
         savedClient.setName(client.getName());
+        clientRepository.save(client);
         return savedClient;
+    }
+
+    public void delete(UUID uuid) {
+        clientRepository.deleteById(uuid);
     }
 }

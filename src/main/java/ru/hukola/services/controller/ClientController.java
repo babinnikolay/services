@@ -31,11 +31,17 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity<Client> create(@RequestBody Client client) {
-        return ResponseEntity.ok(clientService.save(client));
+        return ResponseEntity.ok(clientService.create(client));
     }
 
     @PutMapping("{uuid}")
     public ResponseEntity<Client> save(@PathVariable UUID uuid, @RequestBody Client client) {
-        return ResponseEntity.ok(clientService.create(uuid, client));
+        return ResponseEntity.ok(clientService.save(uuid, client));
+    }
+
+    @DeleteMapping("{uuid}")
+    public ResponseEntity<Void> delete(@PathVariable UUID uuid) {
+        clientService.delete(uuid);
+        return ResponseEntity.ok().build();
     }
 }
