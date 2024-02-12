@@ -1,6 +1,9 @@
 package ru.hukola.services.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.hukola.services.model.Order;
 import ru.hukola.services.repository.OrderRepository;
@@ -17,8 +20,9 @@ public class OrderService {
     private OrderRepository orderRepository;
     private ClientService clientService;
 
-    public Collection<Order> findAll() {
-        return orderRepository.findAll();
+    public Collection<Order> findAll(int offset, int size) {
+        Page<Order> page = orderRepository.findAll(PageRequest.of(offset, size, Sort.by("date")));
+        return page.stream().toList();
     }
 
     public Order findById(UUID uuid) {

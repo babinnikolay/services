@@ -19,8 +19,9 @@ public class OrderController {
     private OrderService orderService;
 
     @GetMapping
-    public ResponseEntity<Collection<Order>> findAll() {
-        return ResponseEntity.ok(orderService.findAll());
+    public ResponseEntity<Collection<Order>> findAll(@RequestParam(required = false, defaultValue = "0") int page,
+                                                     @RequestParam(required = false, defaultValue = "10") int size) {
+        return ResponseEntity.ok(orderService.findAll(page, size));
     }
 
     @GetMapping("{uuid}")
