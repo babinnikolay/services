@@ -1,6 +1,9 @@
 package ru.hukola.services.service;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.hukola.services.model.Client;
 import ru.hukola.services.model.Order;
@@ -17,8 +20,9 @@ import java.util.UUID;
 public class ClientService {
     private final ClientRepository clientRepository;
 
-    public Collection<Client> findAll() {
-        return clientRepository.findAll();
+    public Collection<Client> findAll(int offset, int size) {
+        Page<Client> page = clientRepository.findAll(PageRequest.of(offset, size, Sort.by("name")));
+        return page.stream().toList();
     }
 
     public Client findById(UUID uuid) {

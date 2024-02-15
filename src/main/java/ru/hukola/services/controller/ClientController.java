@@ -20,8 +20,9 @@ public class ClientController {
     private final ClientService clientService;
 
     @GetMapping
-    public ResponseEntity<Collection<Client>> findAll() {
-        return ResponseEntity.ok(clientService.findAll());
+    public ResponseEntity<Collection<Client>> findAll(@RequestParam(required = false, defaultValue = "0") int page,
+                                                      @RequestParam(required = false, defaultValue = "10") int size) {
+        return ResponseEntity.ok(clientService.findAll(page, size));
     }
 
     @GetMapping("{uuid}")
