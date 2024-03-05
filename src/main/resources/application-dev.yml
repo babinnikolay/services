@@ -15,3 +15,14 @@ spring:
   sql:
     init:
       mode: never
+servicer:
+  security:
+    JWT_KEY: jxgEQeXHuPq8VdbyYFNkANdudQ53YUn4
+    JWT_HEADER: Authorization
+    token-expiration-time: 86400000000
+    csrf-prefix: _csrf
+  application:
+    name: Servicer
+    token-name: JWT token
+  frontend-address: http://localhost:4200
+

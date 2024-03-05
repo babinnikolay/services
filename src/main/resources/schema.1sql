@@ -1,0 +1,38 @@
+alter table if exists orders
+drop
+constraint if exists FKle02q3xgw5nev9dh0yfq6vsjw;
+
+drop table if exists clients cascade;
+drop table if exists orders cascade;
+drop table if exists s_users cascade;
+
+create table clients
+(
+    uuid uuid not null,
+    name varchar(255),
+    primary key (uuid)
+);
+
+create table orders
+(
+    amount      float4  not null,
+    paid        boolean not null,
+    order_date  timestamp(6),
+    client_uuid uuid unique,
+    uuid        uuid    not null,
+    description varchar(255),
+    primary key (uuid)
+);
+
+create table s_users
+(
+    uuid     uuid not null,
+    name     varchar(255),
+    password varchar(255),
+    primary key (uuid)
+);
+
+alter table if exists orders
+    add constraint FKle02q3xgw5nev9dh0yfq6vsjw
+    foreign key (client_uuid)
+    references clients;
