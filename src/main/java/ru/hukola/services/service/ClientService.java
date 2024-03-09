@@ -7,7 +7,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.hukola.services.model.Client;
 import ru.hukola.services.model.Order;
+import ru.hukola.services.model.User;
 import ru.hukola.services.repository.ClientRepository;
+import ru.hukola.services.repository.UserRepository;
 
 import java.util.Collection;
 import java.util.UUID;
@@ -19,28 +21,34 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ClientService {
     private final ClientRepository clientRepository;
+    private final UserService userService;
 
     public Collection<Client> findAll(int offset, int size) {
-        Page<Client> page = clientRepository.findAll(PageRequest.of(offset, size, Sort.by("name")));
+        User user = userService.getSecurityUser();
+        Page<Client> page = clientRepository.findAllByUser(user, PageRequest.of(offset, size, Sort.by("name")));
         return page.stream().toList();
     }
 
     public Client findById(UUID uuid) {
-        return clientRepository.findById(uuid).orElseThrow();
+        User user = userService.getSecurityUser();
+        return clientRepository.findByUuidAndUser(uuid, user).orElseThrow();
     }
 
     public Client create(Client client) {
+        client.setUser(userService.getSecurityUser());
         return clientRepository.save(client);
     }
 
     public Client save(UUID uuid, Client client) {
         Client savedClient = clientRepository.findById(uuid).orElseThrow();
+        savedClient.setUser(userService.getSecurityUser());
         savedClient.setName(client.getName());
         clientRepository.save(client);
         return savedClient;
     }
 
     public void delete(UUID uuid) {
-        clientRepository.deleteById(uuid);
+        if (findById(uuid) != null)
+            clientRepository.deleteById(uuid);
     }
 }

@@ -70,7 +70,7 @@ public class ProjectSecurityConfiguration {
                         new CorsServices(frontedAddress, jwtHeader, tokenExpirationTime).getCorsConfiguration(request)))
                 .csrf(csrf -> csrf.requireCsrfProtectionMatcher(
                         request -> !csrfAllowedMethods.contains(request.getMethod()))
-                        .ignoringRequestMatchers("/login", "/logout")
+                        .ignoringRequestMatchers("/login", "/logout", "register")
                         .csrfTokenRepository(csrfTokenRepository)
                         .csrfTokenRequestHandler(requestHandler)
                 )
@@ -81,7 +81,7 @@ public class ProjectSecurityConfiguration {
                 .addFilterBefore(new JWTTokenValidatorFilter(jwtKey, jwtHeader), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/orders", "/clients").authenticated()
-                        .requestMatchers("/login", "/logout").permitAll())
+                        .requestMatchers("/login", "/logout", "/register").permitAll())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }

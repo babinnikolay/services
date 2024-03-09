@@ -3,11 +3,9 @@ package ru.hukola.services.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.hukola.services.model.User;
+import ru.hukola.services.model.dto.UserRegistrationDto;
 import ru.hukola.services.service.UserService;
 
 /**
@@ -23,5 +21,10 @@ public class LoginController {
     public ResponseEntity<User> getUserDetails(Authentication authentication) {
         User user = userService.findUserByName(authentication.getName());
         return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<User> registerUser(@RequestBody UserRegistrationDto dto) {
+        return ResponseEntity.ok(userService.createUser(dto));
     }
 }

@@ -25,4 +25,6 @@ public class Order {
     private String description;
     private float amount;
     private boolean paid;
+    @ManyToOne
+    private User user;
 }
