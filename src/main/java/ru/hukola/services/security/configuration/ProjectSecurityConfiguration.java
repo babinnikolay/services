@@ -2,34 +2,38 @@ package ru.hukola.services.security.configuration;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.security.web.csrf.*;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import ru.hukola.services.security.filter.CsrfCookieFilter;
-import ru.hukola.services.security.filter.JWTTokenGeneratorFilter;
-import ru.hukola.services.security.filter.JWTTokenValidatorFilter;
-import ru.hukola.services.security.filter.RequestValidationBeforeFilter;
+import ru.hukola.services.security.filter.*;
+import ru.hukola.services.service.UserService;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * @author Babin Nikolay
  */
 @Configuration
+@RequiredArgsConstructor
 public class ProjectSecurityConfiguration {
+
+    private final UserService userService;
 
     @Value("${servicer.security.csrf-prefix}")
     private String prefix;
@@ -54,21 +58,30 @@ public class ProjectSecurityConfiguration {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        Set<String> csrfAllowedMethods = Set.of("GET", "HEAD", "TRACE", "OPTIONS");
+        CookieCsrfTokenRepository csrfTokenRepository = new CookieCsrfTokenRepository();
+        csrfTokenRepository.setCookieCustomizer(builder -> {
+            builder.value(UUID.randomUUID().toString()).sameSite("string").maxAge(8600).httpOnly(false).build();
+        });
         CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
 
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(corsCustomizer -> corsCustomizer.configurationSource(request ->
                         new CorsServices(frontedAddress, jwtHeader, tokenExpirationTime).getCorsConfiguration(request)))
-                .csrf(csrf -> csrf.csrfTokenRequestHandler(requestHandler)
-                        .ignoringRequestMatchers("/login")
-                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+                .csrf(csrf -> csrf.requireCsrfProtectionMatcher(
+                        request -> !csrfAllowedMethods.contains(request.getMethod()))
+                        .ignoringRequestMatchers("/login", "/logout")
+                        .csrfTokenRepository(csrfTokenRepository)
+                        .csrfTokenRequestHandler(requestHandler)
+                )
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
-                .addFilterAfter(new JWTTokenGeneratorFilter(jwtKey, applicationName, tokenName, jwtHeader, tokenExpirationTime),
+                .addFilterAfter(new JWTTokenGeneratorFilter(userService, jwtKey, applicationName,
+                                tokenName, jwtHeader, tokenExpirationTime),
                         BasicAuthenticationFilter.class)
                 .addFilterBefore(new JWTTokenValidatorFilter(jwtKey, jwtHeader), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/orders", "/clients").authenticated()
-                        .requestMatchers("/login").permitAll())
+                        .requestMatchers("/login", "/logout").permitAll())
                 .httpBasic(Customizer.withDefaults());
         return http.build();
     }
