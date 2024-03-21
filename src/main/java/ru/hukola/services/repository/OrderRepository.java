@@ -4,9 +4,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import ru.hukola.services.model.Client;
 import ru.hukola.services.model.Order;
 import ru.hukola.services.model.User;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,4 +20,8 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, UUID>
     Page<Order> findAllByUser(User user, Pageable pageable);
 
     Optional<Order> findByUuidAndUser(UUID id, User user);
+
+    Collection<Order> findAllByClientAndDateBetweenAndPaidOrderByDate(Client client, Date from, Date to, boolean paid);
+    Collection<Order> findAllByClientAndPaidOrderByDate(Client client, boolean paid);
+    Collection<Order> findAllByPaid(boolean paid);
 }

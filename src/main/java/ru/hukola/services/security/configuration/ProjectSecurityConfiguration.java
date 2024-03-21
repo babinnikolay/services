@@ -8,13 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.ExceptionTranslationFilter;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.csrf.*;
 import org.springframework.web.cors.CorsConfiguration;
@@ -81,7 +76,7 @@ public class ProjectSecurityConfiguration {
                         BasicAuthenticationFilter.class)
                 .addFilterBefore(new JWTTokenValidatorFilter(jwtKey, jwtHeader), BasicAuthenticationFilter.class)
                 .authorizeHttpRequests(requests -> requests
-                        .requestMatchers("/orders/**", "/clients/**", "/change/**", "/feedback").authenticated()
+                        .requestMatchers("/orders/**", "/clients/**", "/change/**", "/feedback", "/reports/**").authenticated()
                         .requestMatchers("/login", "/logout", "/register").permitAll())
                 .httpBasic(Customizer.withDefaults());
         return http.build();

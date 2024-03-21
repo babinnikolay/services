@@ -1,10 +1,7 @@
 package ru.hukola.services.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
@@ -14,8 +11,8 @@ import java.util.UUID;
 @Entity(name="clients")
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Getter @Setter
+@EqualsAndHashCode
 public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
