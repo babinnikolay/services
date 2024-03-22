@@ -1,6 +1,7 @@
 package ru.hukola.services.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.Date;
@@ -19,7 +20,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
     @Column(name = "order_date")
+    @NotNull
     private Date date;
+    @NotNull
     @ManyToOne(cascade=CascadeType.MERGE)
     private Client client;
     private String description;

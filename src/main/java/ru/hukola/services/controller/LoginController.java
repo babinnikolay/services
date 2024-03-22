@@ -1,5 +1,6 @@
 package ru.hukola.services.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -25,17 +26,17 @@ public class LoginController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserRegistrationDto dto) {
+    public ResponseEntity<User> registerUser(@RequestBody @Valid UserRegistrationDto dto) {
         return ResponseEntity.ok(userService.createUser(dto));
     }
 
     @PutMapping("/change/email")
-    public ResponseEntity<NewUserCredentialDto> changeEmail(@RequestBody NewUserCredentialDto dto) {
+    public ResponseEntity<NewUserCredentialDto> changeEmail(@RequestBody @Valid NewUserCredentialDto dto) {
         return ResponseEntity.ok(userService.changeEmail(dto));
     }
 
     @PutMapping("/change/password")
-    public ResponseEntity<NewUserCredentialDto> changePassword(@RequestBody NewUserCredentialDto dto) {
+    public ResponseEntity<NewUserCredentialDto> changePassword(@RequestBody @Valid NewUserCredentialDto dto) {
         return ResponseEntity.ok(userService.changePassword(dto));
     }
 }

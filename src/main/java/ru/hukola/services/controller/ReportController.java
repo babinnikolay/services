@@ -1,5 +1,6 @@
 package ru.hukola.services.controller;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +33,7 @@ public class ReportController {
     public ResponseEntity<Invoice> getInvoice(@RequestParam boolean allPeriods,
                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date from,
                                               @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date to,
-                                              @RequestParam UUID clientId) {
+                                              @RequestParam @NotNull UUID clientId) {
 
 
         return ResponseEntity.ok(reportService.getInvoice(allPeriods, from, to, clientId));

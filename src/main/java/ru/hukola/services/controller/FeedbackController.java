@@ -1,5 +1,6 @@
 package ru.hukola.services.controller;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class FeedbackController {
     private final FeedbackService feedbackService;
 
     @PostMapping
-    public ResponseEntity<Void> newFeedback(@RequestBody Feedback feedback) {
+    public ResponseEntity<Void> newFeedback(@RequestBody @Valid Feedback feedback) {
         feedbackService.newFeedback(feedback);
         return ResponseEntity.ok(null);
     }

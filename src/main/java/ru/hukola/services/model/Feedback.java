@@ -1,6 +1,7 @@
 package ru.hukola.services.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,7 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID uuid;
     private String title;
+    @NotBlank
     private String description;
     @ManyToOne
     private User user;

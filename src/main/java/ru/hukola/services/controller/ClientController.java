@@ -1,5 +1,7 @@
 package ru.hukola.services.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,23 +27,18 @@ public class ClientController {
         return ResponseEntity.ok(clientService.findAll(page, size));
     }
 
-    @GetMapping("{uuid}")
-    public ResponseEntity<Client> findById(@PathVariable UUID uuid) {
-        return ResponseEntity.ok(clientService.findById(uuid));
-    }
-
     @PostMapping
-    public ResponseEntity<Client> create(@RequestBody Client client) {
+    public ResponseEntity<Client> create(@RequestBody @Valid Client client) {
         return ResponseEntity.ok(clientService.create(client));
     }
 
     @PutMapping("{uuid}")
-    public ResponseEntity<Client> save(@PathVariable UUID uuid, @RequestBody Client client) {
+    public ResponseEntity<Client> save(@PathVariable @NotNull UUID uuid, @RequestBody @Valid Client client) {
         return ResponseEntity.ok(clientService.save(uuid, client));
     }
 
     @DeleteMapping("{uuid}")
-    public ResponseEntity<Void> delete(@PathVariable UUID uuid) {
+    public ResponseEntity<Void> delete(@PathVariable @NotNull UUID uuid) {
         clientService.delete(uuid);
         return ResponseEntity.ok().build();
     }

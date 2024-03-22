@@ -1,5 +1,7 @@
 package ru.hukola.services.controller;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,23 +26,18 @@ public class OrderController {
         return ResponseEntity.ok(orderService.findAll(page, size));
     }
 
-    @GetMapping("{uuid}")
-    public ResponseEntity<Order> findById(@PathVariable UUID uuid) {
-        return ResponseEntity.ok(orderService.findById(uuid));
-    }
-
     @PostMapping
-    public ResponseEntity<Order> create(@RequestBody Order order) {
-        return ResponseEntity.ok(orderService.save(order));
+    public ResponseEntity<Order> create(@RequestBody @Valid Order order) throws Exception {
+        return ResponseEntity.ok(orderService.create(order));
     }
 
     @PutMapping("{uuid}")
-    public ResponseEntity<Order> save(@PathVariable UUID uuid, @RequestBody Order order) {
+    public ResponseEntity<Order> save(@PathVariable @NotNull UUID uuid, @RequestBody @Valid Order order) {
         return ResponseEntity.ok(orderService.create(uuid, order));
     }
 
     @DeleteMapping("{uuid}")
-    public ResponseEntity<Void> delete(@PathVariable UUID uuid) {
+    public ResponseEntity<Void> delete(@PathVariable @NotNull UUID uuid) {
         orderService.delete(uuid);
         return ResponseEntity.ok().build();
     }

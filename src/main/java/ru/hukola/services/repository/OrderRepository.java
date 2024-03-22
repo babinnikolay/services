@@ -21,7 +21,9 @@ public interface OrderRepository extends PagingAndSortingRepository<Order, UUID>
 
     Optional<Order> findByUuidAndUser(UUID id, User user);
 
-    Collection<Order> findAllByClientAndDateBetweenAndPaidOrderByDate(Client client, Date from, Date to, boolean paid);
-    Collection<Order> findAllByClientAndPaidOrderByDate(Client client, boolean paid);
-    Collection<Order> findAllByPaid(boolean paid);
+    Collection<Order> findAllByClientAndDateBetweenAndPaidAndUserOrderByDate(Client client, Date from, Date to, boolean paid, User user);
+
+    Collection<Order> findAllByClientAndPaidAndUserOrderByDate(Client client, boolean paid, User user);
+
+    Collection<Order> findAllByPaidAndUser(boolean paid, User user);
 }

@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.hukola.services.model.Client;
 import ru.hukola.services.model.Order;
+import ru.hukola.services.model.User;
 import ru.hukola.services.model.report.Invoice;
 import ru.hukola.services.model.report.TotalReportsData;
 import ru.hukola.services.repository.OrderRepository;
@@ -21,11 +22,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ReportService {
     private final ClientService clientService;
+    private final UserService userService;
     private final OrderRepository orderRepository;
     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
     public TotalReportsData getTotalReportsData() {
-        Collection<Order> orders = orderRepository.findAllByPaid(false);
+        User user = userService.getSecurityUser();
+        Collection<Order> orders = orderRepository.findAllByPaidAndUser(false, user);
 
         TotalReportsData data = new TotalReportsData();
         data.setTotalUnpaidOrders(orders.size());
@@ -35,18 +38,19 @@ public class ReportService {
     }
 
     public Invoice getInvoice(boolean forAllPeriods, Date from, Date to, UUID clientId) {
+        User user = userService.getSecurityUser();
         Client client = clientService.findById(clientId);
         Collection<Order> orders;
         Invoice invoice = new Invoice();
 
         if (forAllPeriods) {
-            orders = orderRepository.findAllByClientAndPaidOrderByDate(client, false);
+            orders = orderRepository.findAllByClientAndPaidAndUserOrderByDate(client, false, user);
             Date min = orders.stream().map(Order::getDate).min(Date::compareTo).orElse(new Date());
             Date max = orders.stream().map(Order::getDate).max(Date::compareTo).orElse(new Date());
             invoice.setFrom(min);
             invoice.setTo(max);
         } else {
-            orders = orderRepository.findAllByClientAndDateBetweenAndPaidOrderByDate(client, from, to, false);
+            orders = orderRepository.findAllByClientAndDateBetweenAndPaidAndUserOrderByDate(client, from, to, false, user);
             invoice.setFrom(from);
             invoice.setTo(to);
         }

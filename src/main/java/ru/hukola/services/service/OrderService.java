@@ -1,5 +1,6 @@
 package ru.hukola.services.service;
 
+import jakarta.validation.ValidationException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,9 +33,13 @@ public class OrderService {
         return orderRepository.findByUuidAndUser(uuid, user).orElseThrow();
     }
 
-    public Order save(Order order) {
+    public Order create(Order order) throws Exception {
+        if (order.getClient().getUuid() == null) {
+            throw new ValidationException("Client must be selected");
+        }
         User user = userService.getSecurityUser();
         order.setUser(user);
+
         return orderRepository.save(order);
     }
 
