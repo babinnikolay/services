@@ -6,7 +6,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.hukola.services.model.Client;
-import ru.hukola.services.model.Order;
 import ru.hukola.services.service.ClientService;
 
 import java.util.Collection;

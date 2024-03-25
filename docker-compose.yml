@@ -1,7 +1,7 @@
 version: '3.5'
 
 services:
-  postgres:
+  services-db:
     container_name: services-db
     image: postgres
     environment:
@@ -11,4 +11,31 @@ services:
       PGDATA: /data/postgres
     ports:
       - "5432:5432"
+    volumes:
+      - ./pg-data/:/data/postgres
     restart: unless-stopped
+    networks:
+      - services
+  backend:
+    image: selfbiller/services-backend-srv
+    depends_on: [services-db]
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://services-db:5432/services
+      SPRING_DATASOURCE_DRIVER-CLASS-NAME: org.postgresql.Driver
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_JPA_HIBERNATE_DDL-AUTO: update
+      SERVICER_SECURITY_JWT_KEY: jxgEQeXHuPq8VdbyYFNkANdudQ53YUn4
+      SERVICER_SECURITY_JWT_HEADER: Authorization
+      SERVICER_SECURITY_TOKEN-EXPIRATION-TIME: 86400
+      SERVICER_SECURITY_CSRF-PREFIX: _csrf
+      SERVICER_APPLICATION_NAME: Servicer
+      SERVICER_APPLICATION_TOKEN-NAME: Servicer
+      SERVICER_FRONTEND-ADDRESS: http://localhost:4200
+    ports:
+      - "8080:8080"
+    networks:
+      - services
+networks:
+  services:
+    driver: bridge

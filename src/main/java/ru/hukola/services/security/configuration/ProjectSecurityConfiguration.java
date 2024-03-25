@@ -37,13 +37,13 @@ public class ProjectSecurityConfiguration {
     @Value("${servicer.frontend-address}")
     private String frontedAddress;
 
-    @Value("${servicer.security.JWT_HEADER}")
+    @Value("${servicer.security.jwt-header}")
     private String jwtHeader;
 
     @Value("${servicer.security.token-expiration-time}")
     private long tokenExpirationTime;
 
-    @Value("${servicer.security.JWT_KEY}")
+    @Value("${servicer.security.jwt-key}")
     private String jwtKey;
 
     @Value("${servicer.application.name}")

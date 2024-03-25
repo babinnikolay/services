@@ -6,10 +6,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.hukola.services.model.Client;
-import ru.hukola.services.model.Order;
 import ru.hukola.services.model.User;
 import ru.hukola.services.repository.ClientRepository;
-import ru.hukola.services.repository.UserRepository;
 
 import java.util.Collection;
 import java.util.UUID;

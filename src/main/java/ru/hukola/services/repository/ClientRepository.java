@@ -7,7 +7,6 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import ru.hukola.services.model.Client;
 import ru.hukola.services.model.User;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
