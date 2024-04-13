@@ -34,7 +34,7 @@ public class OrderService {
         return orderRepository.findByUuidAndUser(uuid, user).orElseThrow();
     }
 
-    public Order create(Order order) throws Exception {
+    public Order create(Order order) {
         if (order.getClient().getUuid() == null) {
             throw new ValidationException("Client must be selected");
         }
