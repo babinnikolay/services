@@ -41,7 +41,7 @@ public class ClientService {
         Client savedClient = clientRepository.findById(uuid).orElseThrow();
         savedClient.setUser(userService.getSecurityUser());
         savedClient.setName(client.getName());
-        clientRepository.save(client);
+        clientRepository.save(savedClient);
         return savedClient;
     }
 

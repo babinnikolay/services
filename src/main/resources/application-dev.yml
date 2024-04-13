@@ -1,3 +1,4 @@
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/services
@@ -24,7 +25,7 @@ servicer:
   security:
     JWT_KEY: jxgEQeXHuPq8VdbyYFNkANdudQ53YUn4
     JWT_HEADER: Authorization
-    token-expiration-time: 86400000000
+    token-expiration-time: 86400000
     csrf-prefix: _csrf
   application:
     name: Servicer

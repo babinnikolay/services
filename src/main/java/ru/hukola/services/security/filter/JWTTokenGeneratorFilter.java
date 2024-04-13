@@ -30,17 +30,26 @@ public class JWTTokenGeneratorFilter extends OncePerRequestFilter {
     private final String applicationName;
     private final String tokenName;
     private final String jwtHeader;
-    private final long tokenExpirationTime;
+    private long tokenExpirationTime;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         if (null != authentication) {
             SecretKey key = Keys.hmacShaKeyFor(jwtKey.getBytes(StandardCharsets.UTF_8));
             User user = userService.findUserByName(authentication.getName());
             UUID uuid = user != null ? user.getUuid() : null;
             String email = user != null ? user.getEmail() : null;
+
+            String[] param = request.getParameterValues("remember");
+            if (param != null && param.length > 0)
+            {
+                boolean isRemember = Boolean.parseBoolean(param[0]);
+                if (isRemember)
+                    tokenExpirationTime += (86400000L * 30);
+            }
 
             String jwt = Jwts.builder()
                     .issuer(applicationName)

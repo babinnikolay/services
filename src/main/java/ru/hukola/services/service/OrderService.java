@@ -24,7 +24,8 @@ public class OrderService {
 
     public Collection<Order> findAll(int offset, int size) {
         User user = userService.getSecurityUser();
-        Page<Order> page = orderRepository.findAllByUser(user, PageRequest.of(offset, size, Sort.by("date")));
+        Page<Order> page = orderRepository.findAllByUser(user,
+                PageRequest.of(offset, size, Sort.by(Sort.Direction.DESC, "date")));
         return page.stream().toList();
     }
 
