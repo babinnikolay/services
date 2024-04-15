@@ -1,1 +1,1 @@
-Simple CRM system. Expamle: http://selfbiller.ru
+Simple CRM system. Example: http://selfbiller.ru
